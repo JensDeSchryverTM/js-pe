@@ -32,9 +32,8 @@
                     <div class="col-md-6 mb-3">
                         <label for="gebruikersnaam" class="form-label">Gebruikersnaam</label>
                         <div class="input-group">
-                            <span class="input-group-text" id="basic-addon1">@</span>
-                            <input type="text" class="form-control" placeholder="r0909312" aria-label="Username"
-                                aria-describedby="basic-addon1">
+                            <span class="input-group-text" id="gebruikersnaam">@</span>
+                            <input type="text" class="form-control" placeholder="r0909312" aria-label="Username">
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
@@ -131,16 +130,70 @@
                     </div>
 
                     <hr class="mt-3 mb-4">
-                    <button type="submit" class="btn btn-primary mb-4">Wave your magic wand</button>
+                    <button type="button" class="btn btn-primary mb-4" id="verzenden">Wave your magic wand</button>
                 </form>
             </div>
             <div class="col-md-4">
-                <div id="result">
+                <div id="result" class="" role="alert">
                     <!-- Hier komen de formulier meldingen -->
+                    <h4 id="resulTitel" class="alert-heading"></h4>
+                    <p id="resultMelding"></p>
+                </div>
+                <div id="betalingswijze" class="" role="alert">
+                    <!-- Hier komt de betalingswijze -->
+                    <h4 id="betalingswijzeTitel" class="alert-heading"></h4>
+                    <p id="keuzeBetaling"></p>
                 </div>
             </div>
         </div>
     </main>
+    <script>
+        let errors = []
+        let melding = ""
+        let resultDiv = document.getElementById("result")
+        let resultTitel = document.getElementById("resulTitel")
+        let resultMelding = document.getElementById("resultMelding")
+        let betalingswijzeDiv = document.getElementById("betalingswijze")
+        let betalingswijzeTitel = document.getElementById("betalingswijzeTitel")
+        let keuzeBetaling = document.getElementById("keuzeBetaling")
+        let verzenden = document.getElementById("verzenden")
+
+
+        verzenden.addEventListener("click", validateForm)
+
+
+        function checkEmptyField(veld, melding) {
+            if (veld.value == "") {
+                errors.push(melding)
+            }
+        }
+
+        function validateForm() {
+            checkEmptyField(document.getElementById("voornaam"), "Het veld voornaam is vereist.")
+            checkEmptyField(document.getElementById("naam"), "Het veld naam is vereist.")
+            checkEmptyField(document.getElementById("gebruikersnaam"), "het veld gebruikersnaam is vereist.")
+            checkEmptyField(document.getElementById("email"), "Het veld email is vereist.")
+            checkEmptyField(document.getElementById("adres"), "Het veld adres is vereist.")
+
+            if (errors.length > 0) {
+                // Er zijn fouten gevonden, toon deze aan de gebruiker in de div result:
+                // https://developer.mozilla.org/en-US/docs/Web/API/Element/classList
+                resultDiv.classList.add("alert", "alert-danger")
+                resultTitel.innerHTML = "Yikes, errors.."
+                resultMelding.innerHTML = errors.join("<br>")
+            } else {
+                // Er zijn geen fouten gevonden, Goed gedaan melding:
+                resultDiv.classList.add("alert", "alert-success")
+                resultTitel.innerHTML = "Goed gedaan!"
+                resultMelding.innerHTML = "Aww yeah, je werd geregistreerd."
+                // Betalingswijze:
+                betalingswijzeDiv.classList.add("alert", "alert-info")
+                betalingswijzeTitel.innerHTML = "Betalingswijze"
+                keuzeBetaling.innerHTML = "Je hebt gekozen voor: Hier komt de betalingswijze"
+            }
+        }
+
+    </script>
 </body>
 
 </html>
