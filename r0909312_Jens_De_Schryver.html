@@ -150,13 +150,13 @@
     <script>
         let errors = []
         let melding = ""
-        let resultDiv = document.getElementById("result")
-        let resultTitel = document.getElementById("resulTitel")
-        let resultMelding = document.getElementById("resultMelding")
-        let betalingswijzeDiv = document.getElementById("betalingswijze")
-        let betalingswijzeTitel = document.getElementById("betalingswijzeTitel")
-        let keuzeBetaling = document.getElementById("keuzeBetaling")
-        let verzenden = document.getElementById("verzenden")
+        let resultDiv = document.querySelector("#result")
+        let resultTitel = document.querySelector("#resulTitel")
+        let resultMelding = document.querySelector("#resultMelding")
+        let betalingswijzeDiv = document.querySelector("#betalingswijze")
+        let betalingswijzeTitel = document.querySelector("#betalingswijzeTitel")
+        let keuzeBetaling = document.querySelector("#keuzeBetaling")
+        let verzenden = document.querySelector("#verzenden")
 
 
         verzenden.addEventListener("click", validateForm)
@@ -168,12 +168,26 @@
             }
         }
 
+        function validateEmail(email) {
+            // RegEx voor e-mailvalidatie
+            // https://regex101.com/
+            // https://stackoverflow.com/questions/67375264/exceptional-regex-for-email-id-validation-in-javascript
+            let emailRegEx = /^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$/
+            return emailRegEx.test(email)
+        }
+
+
         function validateForm() {
-            checkEmptyField(document.getElementById("voornaam"), "Het veld voornaam is vereist.")
-            checkEmptyField(document.getElementById("naam"), "Het veld naam is vereist.")
-            checkEmptyField(document.getElementById("gebruikersnaam"), "het veld gebruikersnaam is vereist.")
-            checkEmptyField(document.getElementById("email"), "Het veld email is vereist.")
-            checkEmptyField(document.getElementById("adres"), "Het veld adres is vereist.")
+            errors = []
+            checkEmptyField(document.querySelector("#voornaam"), "Het veld voornaam is vereist.")
+            checkEmptyField(document.querySelector("#naam"), "Het veld naam is vereist.")
+            checkEmptyField(document.querySelector("#gebruikersnaam"), "het veld gebruikersnaam is vereist.")
+            checkEmptyField(document.querySelector("#email"), "Het veld email is vereist.")
+            checkEmptyField(document.querySelector("#adres"), "Het veld adres is vereist.")
+
+            if (!validateEmail(document.querySelector("#email").value)) {
+                errors.push("E-mailadres is niet correct.")
+            }
 
             if (errors.length > 0) {
                 // Er zijn fouten gevonden, toon deze aan de gebruiker in de div result:
@@ -183,6 +197,7 @@
                 resultMelding.innerHTML = errors.join("<br>")
             } else {
                 // Er zijn geen fouten gevonden, Goed gedaan melding:
+                resultDiv.classList.remove("alert", "alert-danger")
                 resultDiv.classList.add("alert", "alert-success")
                 resultTitel.innerHTML = "Goed gedaan!"
                 resultMelding.innerHTML = "Aww yeah, je werd geregistreerd."
