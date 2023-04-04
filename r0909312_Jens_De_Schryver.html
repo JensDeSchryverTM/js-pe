@@ -158,36 +158,57 @@
         let keuzeBetaling = document.querySelector("#keuzeBetaling")
         let verzenden = document.querySelector("#verzenden")
 
-
         verzenden.addEventListener("click", validateForm)
 
-
         function checkEmptyField(veld, melding) {
-            if (veld.value == "") {
+            if (veld == "") {
                 errors.push(melding)
             }
         }
 
         function validateEmail(email) {
             // RegEx voor e-mailvalidatie
+            // ^[\w]+: De gebruikersnaam moet minstens één karakter lang zijn en mag letters, nummers of underscores bevatten.
+            // ([\.-]?[\w]+)*: Gevolgd door optionele combinaties van punten of koppeltekens, maar niet als eerste karakter, en letters, cijfers of underscores.
+            // @: Het @-teken om de gebruikersnaam en het domein te scheiden.
+            // [a-zA-Z\d]+: Het domein moet beginnen met een letter of een nummer.
+            // ([-\.]?[a-zA-Z\d]+)*: Gevolgd door optionele combinaties van punten of koppeltekens en letters of cijfers.
+            // (\.[a-zA-Z\d]+)+$: Het domein moet eindigen met een punt en minstens één letter of cijfer. De regex staat meerdere subdomeinen toe (bijvoorbeeld: example.co.uk).
             // https://regex101.com/
             // https://stackoverflow.com/questions/67375264/exceptional-regex-for-email-id-validation-in-javascript
-            let emailRegEx = /^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$/
+            let emailRegEx = /^[a-zA-Z\d]+[\w.-]*@[a-zA-Z\d]+([-\.]?[a-zA-Z\d]+)*(\.[a-zA-Z\d]+)+$/
             return emailRegEx.test(email)
         }
 
+        function validatePasswords(wachtwoord, herhaalWachtwoord) {
+
+            checkEmptyField(wachtwoord, "Het veld wachtwoord is vereist.")
+            checkEmptyField(herhaalWachtwoord, "Het veld herhaal wachtwoord is vereist.")
+
+            if (wachtwoord.length <= 7) {
+                errors.push("Het wachtwoord moet langer zijn dan 7 karakters.");
+            }
+            if (wachtwoord !== herhaalWachtwoord) {
+                errors.push("Wachtwoorden komen niet overeen.");
+            }
+        }
 
         function validateForm() {
             errors = []
-            checkEmptyField(document.querySelector("#voornaam"), "Het veld voornaam is vereist.")
-            checkEmptyField(document.querySelector("#naam"), "Het veld naam is vereist.")
-            checkEmptyField(document.querySelector("#gebruikersnaam"), "het veld gebruikersnaam is vereist.")
-            checkEmptyField(document.querySelector("#email"), "Het veld email is vereist.")
-            checkEmptyField(document.querySelector("#adres"), "Het veld adres is vereist.")
+            // Controleer lege velden
+            checkEmptyField(document.querySelector("#voornaam").value, "Het veld voornaam is vereist.")
+            checkEmptyField(document.querySelector("#naam").value, "Het veld naam is vereist.")
+            checkEmptyField(document.querySelector("#gebruikersnaam").value, "het veld gebruikersnaam is vereist.")
+            checkEmptyField(document.querySelector("#email").value, "Het veld email is vereist.")
+            checkEmptyField(document.querySelector("#adres").value, "Het veld adres is vereist.")
 
+            // Controleer e-mailadres
             if (!validateEmail(document.querySelector("#email").value)) {
                 errors.push("E-mailadres is niet correct.")
             }
+
+            // Valideer wachtwoord
+            validatePasswords(document.querySelector("#wachtwoord").value, document.querySelector("#herhaalwachtwoord").value)
 
             if (errors.length > 0) {
                 // Er zijn fouten gevonden, toon deze aan de gebruiker in de div result:
@@ -207,6 +228,8 @@
                 keuzeBetaling.innerHTML = "Je hebt gekozen voor: Hier komt de betalingswijze"
             }
         }
+
+
 
     </script>
 </body>
