@@ -112,19 +112,20 @@
                         <h3>Betaling</h3>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="betaling" id="bankingapp"
-                                value="Banking app" checked>
+                                value="Banking app">
                             <label class="form-check-label" for="bankingapp">Banking app</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="betaling" id="overschrijving">
+                            <input class="form-check-input" type="radio" name="betaling" id="overschrijving"
+                                value="Overschrijving">
                             <label class="form-check-label" for="overschrijving">Overschrijving</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="betaling" id="visa">
+                            <input class="form-check-input" type="radio" name="betaling" id="visa" value="Visa card">
                             <label class="form-check-label" for="visa">Visa card</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="betaling" id="paypal">
+                            <input class="form-check-input" type="radio" name="betaling" id="paypal" value="PayPal">
                             <label class="form-check-label" for="paypal">PayPal</label>
                         </div>
                     </div>
@@ -193,6 +194,26 @@
             }
         }
 
+        function validatePayment(veld) {
+            console.log(veld.length)
+            let betalingsWijze = ""
+            for (let i = 0; i < veld.length; i++) {
+                console.log(veld[i].checked)
+                console.log(veld[i].value)
+                if (veld[i].checked) {
+                    betalingsWijze = veld[i].value
+                    break
+                }
+            }
+            if (betalingsWijze === "") {
+                errors.push("Geen betalingswijze geselecteerd.")
+            } else if (errors.length === 0) {
+                betalingswijzeDiv.classList.add("alert", "alert-info")
+                betalingswijzeTitel.innerHTML = "Betalingswijze"
+                keuzeBetaling.innerHTML = "Je betalingswijze is " + betalingsWijze
+            }
+        }
+
         function validateForm() {
             errors = []
             // Controleer lege velden
@@ -202,7 +223,7 @@
             checkEmptyField(document.querySelector("#email").value, "Het veld email is vereist.")
             checkEmptyField(document.querySelector("#adres").value, "Het veld adres is vereist.")
 
-            // Controleer e-mailadres
+            // Valideer e-mailadres
             if (!validateEmail(document.querySelector("#email").value)) {
                 errors.push("E-mailadres is niet correct.")
             }
@@ -210,9 +231,13 @@
             // Valideer wachtwoord
             validatePasswords(document.querySelector("#wachtwoord").value, document.querySelector("#herhaalwachtwoord").value)
 
+            // Valideer betalingswijze
+            validatePayment(document.getElementsByName("betaling"))
+
             if (errors.length > 0) {
                 // Er zijn fouten gevonden, toon deze aan de gebruiker in de div result:
                 // https://developer.mozilla.org/en-US/docs/Web/API/Element/classList
+
                 resultDiv.classList.add("alert", "alert-danger")
                 resultTitel.innerHTML = "Yikes, errors.."
                 resultMelding.innerHTML = errors.join("<br>")
@@ -222,14 +247,8 @@
                 resultDiv.classList.add("alert", "alert-success")
                 resultTitel.innerHTML = "Goed gedaan!"
                 resultMelding.innerHTML = "Aww yeah, je werd geregistreerd."
-                // Betalingswijze:
-                betalingswijzeDiv.classList.add("alert", "alert-info")
-                betalingswijzeTitel.innerHTML = "Betalingswijze"
-                keuzeBetaling.innerHTML = "Je hebt gekozen voor: Hier komt de betalingswijze"
             }
         }
-
-
 
     </script>
 </body>
