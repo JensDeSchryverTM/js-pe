@@ -214,8 +214,18 @@
             }
         }
 
+        function checkPC(veld) {
+            let postcode = veld.value
+
+            if (postcode === "") {
+                errors.push("Het veld postcode is vereist.")
+            } else if (postcode < 1000 || postcode > 9999) {
+                errors.push("De waarde van postcode moet tussen 1000 en 9999 liggen.")
+            }
+        }
+
         function validateForm() {
-            errors = []
+            errors = [] // reset errors array
             // Controleer lege velden
             checkEmptyField(document.querySelector("#voornaam").value, "Het veld voornaam is vereist.")
             checkEmptyField(document.querySelector("#naam").value, "Het veld naam is vereist.")
@@ -233,6 +243,9 @@
 
             // Valideer betalingswijze
             validatePayment(document.getElementsByName("betaling"))
+
+            // Valideer postcode
+            checkPC(document.querySelector("#postcode"))
 
             if (errors.length > 0) {
                 // Er zijn fouten gevonden, toon deze aan de gebruiker in de div result:
