@@ -224,6 +224,12 @@
             }
         }
 
+        function checkAlgemeneVoorwaarden(veld) {
+            if (!veld.checked) {
+                errors.push("Je moet de algemene voorwaarden accepteren.")
+            }
+        }
+
         function validateForm() {
             errors = [] // reset errors array
             // Controleer lege velden
@@ -246,6 +252,9 @@
 
             // Valideer postcode
             checkPC(document.querySelector("#postcode"))
+
+            // Valideer algemene voorwaarden
+            checkAlgemeneVoorwaarden(document.querySelector("#voorwaarden"))
 
             if (errors.length > 0) {
                 // Er zijn fouten gevonden, toon deze aan de gebruiker in de div result:
