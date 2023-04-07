@@ -32,8 +32,9 @@
                     <div class="col-md-6 mb-3">
                         <label for="gebruikersnaam" class="form-label">Gebruikersnaam</label>
                         <div class="input-group">
-                            <span class="input-group-text" id="gebruikersnaam">@</span>
-                            <input type="text" class="form-control" placeholder="r0909312" aria-label="Username">
+                            <span class="input-group-text">@</span>
+                            <input type="text" class="form-control" id="gebruikersnaam" placeholder="r0909312"
+                                aria-label="Username">
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
@@ -186,11 +187,13 @@
             checkEmptyField(wachtwoord, "Het veld wachtwoord is vereist.")
             checkEmptyField(herhaalWachtwoord, "Het veld herhaal wachtwoord is vereist.")
 
-            if (wachtwoord.length <= 7) {
-                errors.push("Het wachtwoord moet langer zijn dan 7 karakters.");
-            }
-            if (wachtwoord !== herhaalWachtwoord) {
-                errors.push("Wachtwoorden komen niet overeen.");
+            if (wachtwoord !== "" && herhaalWachtwoord !== "") {
+                if (wachtwoord.length <= 7) {
+                    errors.push("Het wachtwoord moet langer zijn dan 7 karakters.")
+                }
+                if (wachtwoord !== herhaalWachtwoord) {
+                    errors.push("Wachtwoorden komen niet overeen.")
+                }
             }
         }
 
@@ -230,31 +233,43 @@
             }
         }
 
+        function checkLandEnProvincie(landVeld, provincieVeld) {
+            if (landVeld.selectedIndex === 0) {
+                errors.push("Land is vereist.");
+            }
+            if (provincieVeld.selectedIndex === 0) {
+                errors.push("Provincie is vereist.");
+            }
+        }
+
         function validateForm() {
             errors = [] // reset errors array
-            // Controleer lege velden
+            // Controleer leeg veld voornaam
             checkEmptyField(document.querySelector("#voornaam").value, "Het veld voornaam is vereist.")
+            // Controleer leeg veld achternaam
             checkEmptyField(document.querySelector("#naam").value, "Het veld naam is vereist.")
+            // Controleer leeg veld gebruikersnaam
             checkEmptyField(document.querySelector("#gebruikersnaam").value, "het veld gebruikersnaam is vereist.")
+            // Controleer leeg veld email
             checkEmptyField(document.querySelector("#email").value, "Het veld email is vereist.")
-            checkEmptyField(document.querySelector("#adres").value, "Het veld adres is vereist.")
-
             // Valideer e-mailadres
-            if (!validateEmail(document.querySelector("#email").value)) {
-                errors.push("E-mailadres is niet correct.")
+            if (document.querySelector("#email").value !== "") {
+                if (!validateEmail(document.querySelector("#email").value)) {
+                    errors.push("E-mailadres is niet correct.")
+                }
             }
-
             // Valideer wachtwoord
             validatePasswords(document.querySelector("#wachtwoord").value, document.querySelector("#herhaalwachtwoord").value)
-
-            // Valideer betalingswijze
-            validatePayment(document.getElementsByName("betaling"))
-
+            // Controleer leeg veld adres
+            checkEmptyField(document.querySelector("#adres").value, "Het veld adres is vereist.")
+            // Valideer land en provincie
+            checkLandEnProvincie(document.querySelector("#land"), document.querySelector("#provincie"))
             // Valideer postcode
             checkPC(document.querySelector("#postcode"))
-
             // Valideer algemene voorwaarden
             checkAlgemeneVoorwaarden(document.querySelector("#voorwaarden"))
+            // Valideer betalingswijze
+            validatePayment(document.getElementsByName("betaling"))
 
             if (errors.length > 0) {
                 // Er zijn fouten gevonden, toon deze aan de gebruiker in de div result:
