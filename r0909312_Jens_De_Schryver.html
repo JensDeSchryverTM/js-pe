@@ -10,7 +10,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"
         defer></script>
-    <title>JavaScript Formulier - Jens De Schryver</title>
+    <title>JavaScript Formulier - Jens De Schryver - r0909312</title>
+    <!-- 
+    Studentennummer: r0909312
+    Naam: Jens De Schryver
+    Groep: GTI GPR a1.2
+    Github repository: https://github.com/JensDeSchryverTM/js-pe
+    Website: https://deschryverjens.be/javascript/r0909312_Jens_De_Schryver.html
+    -->
 </head>
 
 <body>
@@ -150,8 +157,8 @@
         </div>
     </main>
     <script>
+        // Initialiseer variabelen
         let errors = []
-        let melding = ""
         let resultDiv = document.querySelector("#result")
         let resultTitel = document.querySelector("#resulTitel")
         let resultMelding = document.querySelector("#resultMelding")
@@ -160,16 +167,20 @@
         let keuzeBetaling = document.querySelector("#keuzeBetaling")
         let verzenden = document.querySelector("#verzenden")
 
+        // Voegt een event listener toe aan de verzendknop
         verzenden.addEventListener("click", validateForm)
 
+        // Deze functie controleert of het gegeven veld leeg is. Als het veld leeg is, voegt het de meegeleverde foutmelding toe aan de errors array.
         function checkEmptyField(veld, melding) {
             if (veld == "") {
                 errors.push(melding)
             }
         }
 
+        // Deze functie valideert een e-mailadres met behulp van een reguliere expressie(RegEx). 
+        // Het test het meegeleverde e-mailadres tegen de reguliere expressie en retourneert een booleanwaarde (true/false) op basis van de geldigheid van het e-mailadres.
         function validateEmail(email) {
-            // RegEx voor e-mailvalidatie
+            // RegEx voor e-mailvalidatie:
             // ^[\w]+: De gebruikersnaam moet minstens één karakter lang zijn en mag letters, nummers of underscores bevatten.
             // ([\.-]?[\w]+)*: Gevolgd door optionele combinaties van punten of koppeltekens, maar niet als eerste karakter, en letters, cijfers of underscores.
             // @: Het @-teken om de gebruikersnaam en het domein te scheiden.
@@ -182,6 +193,9 @@
             return emailRegEx.test(email)
         }
 
+        // Deze functie valideert de meegeleverde wachtwoorden op basis van hun lengte en of ze overeenkomen. 
+        // Het controleert eerst of beide wachtwoordvelden niet leeg zijn en voegt zo nodig foutmeldingen toe aan de errors array. 
+        // Vervolgens controleert het de lengte van het wachtwoord en of de wachtwoorden overeenkomen, en voegt het passende foutmeldingen toe aan de errors array.
         function validatePasswords(wachtwoord, herhaalWachtwoord) {
 
             checkEmptyField(wachtwoord, "Het veld wachtwoord is vereist.")
@@ -197,6 +211,10 @@
             }
         }
 
+        // Deze functie valideert de geselecteerde betalingswijze. 
+        // Het doorloopt de meegeleverde betalingswijze-elementen en controleert of er één geselecteerd is. 
+        // Als er geen betalingswijze is geselecteerd, voegt het een foutmelding toe aan de errors array. 
+        // Als er wel een betalingswijze is geselecteerd en er zijn geen andere fouten, wordt de geselecteerde betalingswijze getoond in de betalingswijze div.
         function validatePayment(veld) {
             console.log(veld.length)
             let betalingsWijze = ""
@@ -217,22 +235,25 @@
             }
         }
 
+        // Deze functie valideert de meegeleverde postcode. Het controleert of de postcode leeg is en voegt een foutmelding toe aan de errors array. 
+        // Vervolgens controleert het of de postcode binnen het geldige bereik ligt (tussen 1000 en 9999) en voegt het indien nodig een foutmelding toe aan de errors array.
         function checkPC(veld) {
             let postcode = veld.value
 
-            if (postcode === "") {
-                errors.push("Het veld postcode is vereist.")
-            } else if (postcode < 1000 || postcode > 9999) {
+            checkEmptyField(postcode, "Het veld postcode is vereist.")
+            if (postcode !== "" && postcode < 1000 || postcode > 9999) {
                 errors.push("De waarde van postcode moet tussen 1000 en 9999 liggen.")
             }
         }
 
+        // Deze functie controleert of de algemene voorwaarden zijn geaccepteerd. Als het meegeleverde veld niet is aangevinkt, voegt het een foutmelding toe aan de errors array.
         function checkAlgemeneVoorwaarden(veld) {
             if (!veld.checked) {
                 errors.push("Je moet de algemene voorwaarden accepteren.")
             }
         }
 
+        // Deze functie controleert of er een land en provincie zijn geselecteerd. Als het land of de provincie niet is geselecteerd, voegt het een foutmelding toe aan de errors array.
         function checkLandEnProvincie(landVeld, provincieVeld) {
             if (landVeld.selectedIndex === 0) {
                 errors.push("Land is vereist.");
@@ -242,6 +263,9 @@
             }
         }
 
+        // Deze functie valideert het volledige formulier door alle bovenstaande functies aan te roepen en de benodigde velden door te geven. 
+        // Als er fouten zijn gevonden, worden deze getoond aan de gebruiker in de 'result'-div. 
+        // Als er geen fouten zijn gevonden, wordt er een succesmelding weergegeven en wordt de verzendknop uitgeschakeld.
         function validateForm() {
             errors = [] // reset errors array
             // Controleer leeg veld voornaam
@@ -274,7 +298,6 @@
             if (errors.length > 0) {
                 // Er zijn fouten gevonden, toon deze aan de gebruiker in de div result:
                 // https://developer.mozilla.org/en-US/docs/Web/API/Element/classList
-
                 resultDiv.classList.add("alert", "alert-danger")
                 resultTitel.innerHTML = "Yikes, errors.."
                 resultMelding.innerHTML = errors.join("<br>")
@@ -284,6 +307,9 @@
                 resultDiv.classList.add("alert", "alert-success")
                 resultTitel.innerHTML = "Goed gedaan!"
                 resultMelding.innerHTML = "Aww yeah, je werd geregistreerd."
+                // Verzendknop disabled zodra het formulier is ingediend 
+                verzenden.disabled = true
+                verzenden.textContent = "Abracadabra... Verzonden!"
             }
         }
 
